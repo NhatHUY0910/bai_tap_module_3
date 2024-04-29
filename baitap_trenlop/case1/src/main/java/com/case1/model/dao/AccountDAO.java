@@ -10,9 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class AccountDTO {
+public class AccountDAO {
     public static void updateAccount(Account account) {
-        try (Connection connection = JdbcConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("UPDATE  account SET birth = ?, address = ?, wallet = ? WHERE userName = ?")) {
+        try (Connection connection = JdbcConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("UPDATE accounts SET birth = ?, address = ?, wallet = ? WHERE userName = ?")) {
             preparedStatement.setString(1, account.getBirth());
             preparedStatement.setString(2, account.getAddress());
             preparedStatement.setDouble(3, account.getWallet());
@@ -26,7 +26,7 @@ public class AccountDTO {
 
     public static Account getAccount(String userName) {
         Account account = null;
-        try (Connection connection = JdbcConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("select * from account where userName = ?")) {
+        try (Connection connection = JdbcConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("select * from accounts where userName = ?")) {
             preparedStatement.setString(1, userName);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()){
@@ -49,7 +49,7 @@ public class AccountDTO {
     public static void deleteAccount(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Account account = (Account) session.getAttribute("account");
-        try (Connection connection = JdbcConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("delete from account where userName = ?")) {
+        try (Connection connection = JdbcConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("delete from accounts where userName = ?")) {
             preparedStatement.setString(1, account.getUserName());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -58,7 +58,7 @@ public class AccountDTO {
     }
 
     public static boolean checkAccountStatus(String userName, String password) {
-        try (Connection connection = JdbcConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("select * from account where binary userName = ? and password =?;")) {
+        try (Connection connection = JdbcConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("select * from accounts where binary userName = ? and password =?;")) {
             preparedStatement.setString(1, userName);
             preparedStatement.setString(2, password);
 
@@ -73,6 +73,22 @@ public class AccountDTO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void createAccount(String userName, String password, String gender, String birth, String address, String role, double wallet) {
+        try (Connection connection = JdbcConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement("insert into accounts(userName, password, gender, birth, address, role, wallet) values (?, ?, ?, ?, ?, ?, ?);")) {
+            preparedStatement.setString(1, userName);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3, gender);
+            preparedStatement.setString(4, birth);
+            preparedStatement.setString(5, address);
+            preparedStatement.setString(6, role);
+            preparedStatement.setDouble(7, wallet);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
 
