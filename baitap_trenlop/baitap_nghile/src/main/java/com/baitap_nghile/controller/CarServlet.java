@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
+@WebServlet(urlPatterns = "/cars")
 public class CarServlet extends HttpServlet {
     private CarDAO carDAO;
 
