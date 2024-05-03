@@ -14,7 +14,6 @@
                 <th>Nhà Sản Xuất</th>
                 <th>Giá</th>
                 <th>Ảnh</th>
-<%--                <th>Hành động</th>--%>
             </tr>
             <c:forEach var="car" item="${cars}">
                 <tr>
