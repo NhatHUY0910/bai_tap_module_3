@@ -148,9 +148,9 @@ public class CarServlet extends HttpServlet {
         Car car = new Car(code, name, producer, price, avatar);
         try {
             if (carDAO.updateCar(car)) {
-                response.sendRedirect("car?action=list");
+                response.sendRedirect("/car?action=update");
             } else {
-                response.sendRedirect("error.jsp");
+                response.sendRedirect("/view/error.jsp");
             }
         } catch (SQLException e) {
             throw new ServletException("Lỗi cập nhật xe", e);
